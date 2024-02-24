@@ -13,6 +13,8 @@
 
 	/** @type { { [key: string]: boolean } } */
 	let keys = {};
+	
+	$: game ? game.keys = keys : null;
 
 	$: game ? game.camera.zoom = zoom : null;
 	$: if (game && keys["d"]) {debug = true} else {debug = false};
@@ -85,11 +87,11 @@
 
 <div class="controls">
 	<div>
-		<label>Zoom: </label>
+		<label for="zoom">Zoom: </label>
 		<input type="range" min="1" max="300" bind:value={zoom} />
 	</div>
 	<div>
-		<label>Speed ({interval}ms): </label>
+		<label for="speed">Speed ({interval}ms): </label>
 		<input type="range" min="0" max="1000" bind:value={interval} />
 	</div>
 	<button on:click={() => game.step()}>Step</button>
@@ -101,7 +103,7 @@
 
 {#if debug}
 	<div class="debug">
-		<label>Mouse World Coords: {mouse_world_pos.x}, {mouse_world_pos.y}</label>
+		<label for="mouse-world-coords">Mouse World Coords: {mouse_world_pos.x}, {mouse_world_pos.y}</label>
 	</div>
 {/if}
 
