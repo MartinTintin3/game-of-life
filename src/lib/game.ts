@@ -13,6 +13,8 @@ export default class Game {
 	mouseDown: boolean = false;
 	mousePos: { x: number, y: number } | null = null;
 
+	clearing = false;
+
 	constructor(canvas: HTMLCanvasElement, public config: Config, public keys: { [key: string]: boolean }) {
 		this.board = new Array(config.width).fill(null).map(() => new Array(config.height).fill(false));
 
@@ -145,6 +147,7 @@ export default class Game {
 
 			this.toggle(x, y);
 			if (this.keys["d"]) console.log(x, y, this.get(x, y));
+			this.clearing = this.get(x, y);
 		}
 
 		this.mouseDown = true;
@@ -161,7 +164,7 @@ export default class Game {
 			} else {
 				const { x, y } = this.camera.screenToWorld(event.clientX, event.clientY);
 
-				this.set(x, y, true);
+				this.set(x, y, this.clearing);
 			}
 		}
 

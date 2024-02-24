@@ -17,6 +17,15 @@
 	$: game ? game.camera.zoom = zoom : null;
 	$: if (game && keys["d"]) {debug = true} else {debug = false};
 
+	let running = false;
+	let interval = 1000;
+
+	const step = () => {
+		if (running) {
+			game.step();
+		}
+		setTimeout(step, interval);
+	};
 
 	onMount(() => {
 		const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
@@ -31,8 +40,8 @@
 
 		/** @type {import("../lib/game").default} */
 		game = new Game(canvas, {
-			width: 1000,
-			height: 1000,
+			width: 500,
+			height: 500,
 			backgroundColor: "white",
 			cellColor: "black",
 			cameraMoveSpeed: 0.05,
@@ -69,6 +78,8 @@
 			mouse_world_pos = game.camera.screenToWorld(e.clientX, e.clientY);
 		});
 		canvas.addEventListener("mouseup", e => game.handleMouseup(e));
+
+		step();
 	});
 </script>
 
@@ -77,8 +88,15 @@
 		<label>Zoom: </label>
 		<input type="range" min="1" max="300" bind:value={zoom} />
 	</div>
+	<div>
+		<label>Speed ({interval}ms): </label>
+		<input type="range" min="0" max="1000" bind:value={interval} />
+	</div>
 	<button on:click={() => game.step()}>Step</button>
-	
+	<button on:click={() => game.board.forEach(c => c.fill(false))}>Clear</button>
+	<button on:click={() => game.board.forEach(c => c.fill(true))}>Fill</button>
+	<button on:click={() => running = !running}>{running ? "Stop" : "Start"}</button>
+
 </div>
 
 {#if debug}
